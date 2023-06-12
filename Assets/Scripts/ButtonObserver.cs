@@ -16,6 +16,21 @@ public class ButtonObserver : MonoBehaviour
     }
     private void SendStatusToGameController(string answer, GameObject senderButton)
     {
+        StartCoroutine( DisableGameControll());
+
         _gameController.InspectTheAnswer(answer, senderButton);
+    }
+    private IEnumerator DisableGameControll()
+    {
+        for (int i = 0; i < _buttonStatuses.Count; i++)
+        {
+            _buttonStatuses[i].GetComponent<Button>().interactable = false;
+        }
+        yield return new WaitForSecondsRealtime(2f);
+
+        for (int i = 0; i < _buttonStatuses.Count; i++)
+        {
+            _buttonStatuses[i].GetComponent<Button>().interactable = true;
+        }
     }
 }

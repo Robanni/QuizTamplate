@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -9,6 +10,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private QuestionHandler _questionHandler;
 
     private int _numberOfQuestion = 0;
+    private int _rightAnswers = 0;
 
     private void Start()
     {
@@ -17,7 +19,7 @@ public class GameController : MonoBehaviour
 
     private void ChangeTheQuestion()
     {
-        if (_numberOfQuestion > _questionData.Length) return;
+        
         _questionHandler.SetButtonQuestions(_questionData[_numberOfQuestion].getWrongAnswers(),
                                             _questionData[_numberOfQuestion].getRightAnswer());
 
@@ -26,16 +28,34 @@ public class GameController : MonoBehaviour
 
     public void InspectTheAnswer(string answer,GameObject button)//Проверяет правильность ответа 
     {
+        Image buttonImage = button.GetComponent<Image>();
+
         if(answer == _questionData[_numberOfQuestion].getRightAnswer())
         {
-            Debug.Log("answer is corrct");
-
-            _numberOfQuestion++;
-            
-            ChangeTheQuestion();
+            StartCoroutine( PlayButtonsAnimation(buttonImage, true));
 
             return;
         }
-        Debug.Log("answer is wrong");
+        StartCoroutine( PlayButtonsAnimation(buttonImage, false));
+    }
+    private IEnumerator PlayButtonsAnimation(Image buttonImage,bool state)
+    {
+        if (state == false)
+        {
+            buttonImage.color = Color.red;
+        }
+        if(state == true)
+        {
+            buttonImage.color = Color.green;
+            _rightAnswers++;
+        }
+               
+        yield return new WaitForSecondsRealtime(2);
+
+        _numberOfQuestion++;
+
+        buttonImage.color = Color.white;
+
+        ChangeTheQuestion();
     }
 }
