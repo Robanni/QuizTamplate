@@ -19,7 +19,8 @@ public class GameController : MonoBehaviour
 
     private void ChangeTheQuestion()
     {
-        
+        if (_numberOfQuestion >= _questionData.Length) return;
+
         _questionHandler.SetButtonQuestions(_questionData[_numberOfQuestion].getWrongAnswers(),
                                             _questionData[_numberOfQuestion].getRightAnswer());
 
@@ -28,12 +29,16 @@ public class GameController : MonoBehaviour
 
     public void InspectTheAnswer(string answer,GameObject button)//Проверяет правильность ответа 
     {
+        if (_numberOfQuestion >= _questionData.Length) return;
+
         Image buttonImage = button.GetComponent<Image>();
 
         if(answer == _questionData[_numberOfQuestion].getRightAnswer())
         {
             StartCoroutine( PlayButtonsAnimation(buttonImage, true));
 
+            _rightAnswers++;
+            
             return;
         }
         StartCoroutine( PlayButtonsAnimation(buttonImage, false));
