@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -9,14 +8,30 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private QuestionHandler _questionHandler;
 
+    [SerializeField] private EndGameMenuController _endGameMenuController;
+
     private int _numberOfQuestion = 0;
     private int _rightAnswers = 0;
 
     private void Start()
     {
         ChangeTheQuestion();
+        
+    }
+    private void Update()
+    {
+        TryToEndTheGame();
     }
 
+    private void TryToEndTheGame()
+    {
+        if(_numberOfQuestion >= _questionData.Length)
+        {
+            _endGameMenuController.OpenEndGamemenu();
+            _endGameMenuController.ShowPlayerScroe(_rightAnswers);
+            _endGameMenuController.ComentPlayerScore(_rightAnswers,_questionData.Length);
+        }
+    }
     private void ChangeTheQuestion()
     {
         if (_numberOfQuestion >= _questionData.Length) return;
